@@ -1,73 +1,91 @@
 // Introduction to Quick Sort
 
-// QuickSort is a Divide and Conquer algorithm
-// We take an element as pivot and we use partition() function to sort the before and after elemets of the pivot.
+// QuickSort is a Divide and Conquer algorithm widely used in sorting applications.
+// The algorithm works by selecting a 'pivot' element from the array and partitioning 
+// the other elements into two sub-arrays: elements less than the pivot and elements 
+// greater than the pivot. This process is then recursively applied to the sub-arrays.
 
-// Following are the ways in which you can take a pivot element : 
-// 1) Pick first element as pivot
-// 2) Pick last element as pivot
-// 3) Pick a random element as pivot
-// 4) Pick median as pivot
+// Ways to select a pivot element:
+// 1) Pick the first element as pivot.
+// 2) Pick the last element as pivot.
+// 3) Pick a random element as pivot.
+// 4) Pick the median as pivot (median of first, middle, and last element).
 
-// We took last element as pivot in the below code demonstration
-
+// In the code below, we use the last element as the pivot for partitioning.
 
 // Time Complexity of Quick Sort
-// 1) Worst Case : When pivot is the greatest or the smallest element, then we have to iterate from increasing and decreasing order. Time complexity will be O(n^2).
-// 2) Average Case : When pivot is choosen between the greatest/smallest element to the middle most element, Time Complexity then will be O(nLogn).
-// 3) Best Case : When pivot choosen is the middle most element, Time Complexity will be O(nLogn).
+// 1) Worst Case: O(n^2) 
+//    - This occurs when the pivot is the smallest or largest element in each recursive call,
+//      leading to unbalanced partitioning.
+// 2) Average Case: O(nLogn)
+//    - On average, the pivot divides the array into reasonably balanced partitions.
+// 3) Best Case: O(nLogn)
+//    - This occurs when the pivot consistently divides the array into two equal halves.
 
-// Quick Sort is the most used sorting technique all over the world becasue even the Worst Case of Time complexity of quick sort is lesser than other sorting technique.
-
+// Despite its worst-case scenario, QuickSort is one of the most efficient sorting algorithms 
+// due to its cache-friendly properties and average-case performance, which is often much better 
+// than O(n^2) sorting algorithms like Bubble Sort or Insertion Sort.
 
 // C++ code for Quick Sort
 #include<iostream>
 using namespace std;
 
-// Partition() function to sort the before and after elements of the pivot.
-// we start from the leftmost element(i = s-1) and keep track of index of smaller (or equal to) elements as i.
-// While traversing, if we find a smaller element, we swap current element with arr[i]. Otherwise we ignore current element. 
+// Partition() function to rearrange elements relative to the pivot
+// The function moves elements smaller than the pivot to the left of the pivot
+// and elements larger than the pivot to the right.
 int partition(int arr[], int s, int e) {
 
-    // We decided the last element as pivot
-    int pivot = arr[e];
-
-    int i = s-1;
-    for(int j=s; j<e; j++) {
-        if(arr[j]<pivot) {
-            i++;
-            swap(arr[i], arr[j]);
+    // Last element chosen as pivot
+    int pivot = arr[e]; 
+    
+    // Index of the smaller element (starts from -1, meaning no smaller elements initially)
+    int i = s - 1; 
+    
+    // Loop over elements from start to one before the pivot (arr[e])
+    for (int j = s; j < e; j++) {
+        // If current element is smaller than the pivot
+        if (arr[j] < pivot) {
+            i++; // Increment index of smaller element
+            swap(arr[i], arr[j]); // Swap current element with the element at index i
         }
     }
-    swap(arr[i+1], arr[e]);
-    return i+1;
+    // Place the pivot element at its correct position (i+1)
+    swap(arr[i + 1], arr[e]);
+    
+    // Return the partition index (new position of the pivot)
+    return i + 1;
 }
 
-// quicksort() function which takes the array from main() function and decide the pivot and send the before and after elements of pivot to partition() function.
+// QuickSort() function that recursively sorts the array
+// It partitions the array around a pivot and recursively sorts the left and right subarrays.
 void quicksort(int arr[], int s, int e) {
-    if(s<e) {
+    if (s < e) {
+        // Partition the array and get the pivot index
         int pi = partition(arr, s, e);
-        quicksort(arr, s, pi-1);
-        quicksort(arr, pi+1, e);
+        
+        // Recursively sort elements before and after the partition
+        quicksort(arr, s, pi - 1);  // Left subarray (elements smaller than the pivot)
+        quicksort(arr, pi + 1, e);  // Right subarray (elements larger than the pivot)
     }
 }
 
-// main() function
+// Main function
 int main() {
-    // We created the array
-    int arr[] = {5,2,7,10,4,8,23,14,21,1};
-    // Total elements in the array is 10
-    int n = 10;
+    // Initialize an array of integers
+    int arr[] = {5, 2, 7, 10, 4, 8, 23, 14, 21, 1};
+    
+    // Number of elements in the array
+    int n = sizeof(arr) / sizeof(arr[0]);
 
-    // quicksort() function is called
-    quicksort(arr, 0, n-1);
+    // Call quicksort() to sort the array
+    quicksort(arr, 0, n - 1);
 
-    // Printed the Sorted array
-    for(int i=0; i<n; i++) {
-        cout<<arr[i]<<" ";
+    // Print the sorted array
+    cout << "Sorted array: ";
+    for (int i = 0; i < n; i++) {
+        cout << arr[i] << " ";
     }
-    // Expected Output: 1 2 4 5 7 8 10 14 21 23
-    cout<<endl;
+    cout << endl;
 
     return 0;
 }
